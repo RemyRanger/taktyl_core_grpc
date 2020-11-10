@@ -1,0 +1,81 @@
+syntax="proto3";
+
+package event;
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+// Defines the import path that should be used to import the generated package,
+// and the package name.
+option go_package = "github.com/RemyRanger/taktyl_core_grpc/proto/event;event";
+
+// These annotations are used when generating the OpenAPI file.
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    version: "1.0";
+  };
+  external_docs: {
+    url: "https://github.com/RemyRanger/taktyl_core_grpc";
+    description: "gRPC-gateway boilerplate repository";
+  }
+  schemes: HTTP;
+};
+
+service EventService {
+  rpc GetEvent(GetEventRequest) returns (Event) {
+    option (google.api.http) = {
+      // Route to this method from GET requests to /api/v1/events/{user_id}
+      get: "/api/v1/events/{user_id}"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Get a event"
+      description: "Get a event from the server."
+      tags: "Events"
+    };
+  }
+  rpc AddEvent(AddEventRequest) returns (Event) {
+    option (google.api.http) = {
+      // Route to this method from POST requests to /api/v1/events
+      post: "/api/v1/events"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Add a event"
+      description: "Add a event to the server."
+      tags: "Events"
+    };
+  }
+  rpc ListEvents(ListEventsRequest) returns (stream Event) {
+    option (google.api.http) = {
+      // Route to this method from GET requests to /api/v1/events
+      get: "/api/v1/events"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "List events"
+      description: "List all events on the server."
+      tags: "Events"
+    };
+  }
+}
+
+message GetEventRequest {
+  string user_id = 1;
+}
+
+message AddEventRequest {
+    string Title = 2;
+    string Content = 3;
+    int32 AuthorID = 4;
+}
+
+message ListEventsRequest {}
+
+message Event {
+    int64 ID = 1;
+    string Title = 2;
+    string Content = 3;
+    int32 AuthorID = 4;
+    google.protobuf.Timestamp CreatedAt = 5;
+    google.protobuf.Timestamp UpdatedAt = 6;
+}

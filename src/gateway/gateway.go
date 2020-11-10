@@ -13,14 +13,14 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/rakyll/statik/fs"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/grpclog"
 
-	"github.com/johanbrandhorst/grpc-gateway-boilerplate/insecure"
-	pbExample "github.com/johanbrandhorst/grpc-gateway-boilerplate/proto"
+	"github.com/RemyRanger/taktyl_core_grpc/src/insecure"
+	pbEvent "github.com/RemyRanger/taktyl_core_grpc/src/proto/event"
+	pbUser "github.com/RemyRanger/taktyl_core_grpc/src/proto/user"
 
 	// Static files
-	_ "github.com/johanbrandhorst/grpc-gateway-boilerplate/statik"
+	_ "github.com/RemyRanger/taktyl_core_grpc/statik"
 )
 
 // getOpenAPIHandler serves an OpenAPI UI.
@@ -48,7 +48,8 @@ func Run(dialAddr string) error {
 	conn, err := grpc.DialContext(
 		context.Background(),
 		dialAddr,
-		grpc.WithTransportCredentials(credentials.NewClientTLSFromCert(insecure.CertPool, "")),
+		//grpc.WithTransportCredentials(credentials.NewClientTLSFromCert(insecure.CertPool, "")),
+		grpc.WithInsecure(),
 		grpc.WithBlock(),
 	)
 	if err != nil {
@@ -56,7 +57,12 @@ func Run(dialAddr string) error {
 	}
 
 	gwmux := runtime.NewServeMux()
-	err = pbExample.RegisterUserServiceHandler(context.Background(), gwmux, conn)
+	err = pbUser.RegisterUserServiceHandler(context.Background(), gwmux, conn)
+	if err != nil {
+		return fmt.Errorf("failed to register gateway: %w", err)
+	}
+
+	err = pbEvent.RegisterEventServiceHandler(context.Background(), gwmux, conn)
 	if err != nil {
 		return fmt.Errorf("failed to register gateway: %w", err)
 	}

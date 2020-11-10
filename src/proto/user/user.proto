@@ -1,13 +1,14 @@
 syntax="proto3";
 
-package example;
+package user;
 
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/protobuf/timestamp.proto";
 
 // Defines the import path that should be used to import the generated package,
 // and the package name.
-option go_package = "github.com/johanbrandhorst/grpc-gateway-boilerplate/proto;example";
+option go_package = "github.com/RemyRanger/taktyl_core_grpc/proto/user;user";
 
 // These annotations are used when generating the OpenAPI file.
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
@@ -15,10 +16,10 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     version: "1.0";
   };
   external_docs: {
-    url: "https://github.com/johanbrandhorst/grpc-gateway-boilerplate";
+    url: "https://github.com/RemyRanger/taktyl_core_grpc";
     description: "gRPC-gateway boilerplate repository";
   }
-  schemes: HTTPS;
+  schemes: HTTP;
 };
 
 service UserService {
@@ -47,10 +48,18 @@ service UserService {
   }
 }
 
-message AddUserRequest {}
+message AddUserRequest {
+  string Nickname = 1;
+  string Email = 2;
+  string Password = 3;
+}
 
 message ListUsersRequest {}
 
 message User {
-  string id = 1;
+  int32 ID = 1;
+  string Nickname = 2;
+  string Email = 3;
+  google.protobuf.Timestamp CreatedAt = 4;
+  google.protobuf.Timestamp UpdatedAt = 5;
 }

@@ -1,11 +1,11 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "example.proto",
+    "title": "user/user.proto",
     "version": "1.0"
   },
   "schemes": [
-    "https"
+    "http"
   ],
   "consumes": [
     "application/json"
@@ -26,13 +26,13 @@
               "type": "object",
               "properties": {
                 "result": {
-                  "$ref": "#/definitions/exampleUser"
+                  "$ref": "#/definitions/userUser"
                 },
                 "error": {
                   "$ref": "#/definitions/rpcStatus"
                 }
               },
-              "title": "Stream result of exampleUser"
+              "title": "Stream result of userUser"
             }
           },
           "default": {
@@ -54,7 +54,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/exampleUser"
+              "$ref": "#/definitions/userUser"
             }
           },
           "default": {
@@ -70,7 +70,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/exampleAddUserRequest"
+              "$ref": "#/definitions/userAddUserRequest"
             }
           }
         ],
@@ -81,17 +81,6 @@
     }
   },
   "definitions": {
-    "exampleAddUserRequest": {
-      "type": "object"
-    },
-    "exampleUser": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      }
-    },
     "protobufAny": {
       "type": "object",
       "properties": {
@@ -121,10 +110,47 @@
           }
         }
       }
+    },
+    "userAddUserRequest": {
+      "type": "object",
+      "properties": {
+        "Nickname": {
+          "type": "string"
+        },
+        "Email": {
+          "type": "string"
+        },
+        "Password": {
+          "type": "string"
+        }
+      }
+    },
+    "userUser": {
+      "type": "object",
+      "properties": {
+        "ID": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "Nickname": {
+          "type": "string"
+        },
+        "Email": {
+          "type": "string"
+        },
+        "CreatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "UpdatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
     }
   },
   "externalDocs": {
     "description": "gRPC-gateway boilerplate repository",
-    "url": "https://github.com/johanbrandhorst/grpc-gateway-boilerplate"
+    "url": "https://github.com/RemyRanger/taktyl_core_grpc"
   }
 }
