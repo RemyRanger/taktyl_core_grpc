@@ -149,7 +149,7 @@ func (u *User) FindAllUsers(db *gorm.DB, srv pbUser.UserService_ListUsersServer)
 		updatedAtTimesStamp, err := ptypes.TimestampProto(user.UpdatedAt)
 
 		// do something
-		srv.Send(&pbUser.User{
+		srv.Send(&pbUser.UserDTO{
 			ID:        int32(user.ID),
 			Nickname:  user.Nickname,
 			Email:     user.Email,
@@ -183,10 +183,10 @@ func (u *User) UpdateAUser(db *gorm.DB, uid uint32) (*User, error) {
 	}
 	db = db.Debug().Model(&User{}).Where("id = ?", uid).Take(&User{}).UpdateColumns(
 		map[string]interface{}{
-			"password":  u.Password,
-			"nickname":  u.Nickname,
-			"email":     u.Email,
-			"update_at": time.Now(),
+			"password":   u.Password,
+			"nickname":   u.Nickname,
+			"email":      u.Email,
+			"updated_at": time.Now(),
 		},
 	)
 	if db.Error != nil {

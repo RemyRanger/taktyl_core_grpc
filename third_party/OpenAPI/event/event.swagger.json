@@ -26,13 +26,13 @@
               "type": "object",
               "properties": {
                 "result": {
-                  "$ref": "#/definitions/eventEvent"
+                  "$ref": "#/definitions/eventEventDTO"
                 },
                 "error": {
                   "$ref": "#/definitions/rpcStatus"
                 }
               },
-              "title": "Stream result of eventEvent"
+              "title": "Stream result of eventEventDTO"
             }
           },
           "default": {
@@ -54,7 +54,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/eventEvent"
+              "$ref": "#/definitions/eventEventDTO"
             }
           },
           "default": {
@@ -77,18 +77,16 @@
         "tags": [
           "Events"
         ]
-      }
-    },
-    "/api/v1/events/{userId}": {
-      "get": {
-        "summary": "Get a event",
-        "description": "Get a event from the server.",
-        "operationId": "EventService_GetEvent",
+      },
+      "put": {
+        "summary": "Update a event",
+        "description": "Update a event to the server.",
+        "operationId": "EventService_UpdateEvent",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/eventEvent"
+              "$ref": "#/definitions/eventEventDTO"
             }
           },
           "default": {
@@ -100,10 +98,83 @@
         },
         "parameters": [
           {
-            "name": "userId",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/eventUpdateEventRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Events"
+        ]
+      }
+    },
+    "/api/v1/events/{eventId}": {
+      "get": {
+        "summary": "Get a event",
+        "description": "Get a event from the server.",
+        "operationId": "EventService_GetEvent",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/eventEventDTO"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "eventId",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "Events"
+        ]
+      },
+      "delete": {
+        "summary": "Delete a event",
+        "description": "Delete a event from the server.",
+        "operationId": "EventService_DeleteEvent",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/eventDeleteEventRequest"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "authorId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
           }
         ],
         "tags": [
@@ -128,7 +199,20 @@
         }
       }
     },
-    "eventEvent": {
+    "eventDeleteEventRequest": {
+      "type": "object",
+      "properties": {
+        "eventId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "authorId": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "eventEventDTO": {
       "type": "object",
       "properties": {
         "ID": {
@@ -152,6 +236,25 @@
         "UpdatedAt": {
           "type": "string",
           "format": "date-time"
+        }
+      }
+    },
+    "eventUpdateEventRequest": {
+      "type": "object",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Title": {
+          "type": "string"
+        },
+        "Content": {
+          "type": "string"
+        },
+        "AuthorID": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },

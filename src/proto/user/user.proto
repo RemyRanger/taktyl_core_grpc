@@ -23,7 +23,18 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 };
 
 service UserService {
-  rpc AddUser(AddUserRequest) returns (User) {
+  rpc GetUser(GetUserRequest) returns (UserDTO) {
+    option (google.api.http) = {
+      // Route to this method from GET requests to /api/v1/events/{user_id}
+      get: "/api/v1/users/{user_id}"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Get a user"
+      description: "Get a user from the server."
+      tags: "Users"
+    };
+  }
+  rpc AddUser(AddUserRequest) returns (UserDTO) {
     option (google.api.http) = {
       // Route to this method from POST requests to /api/v1/users
       post: "/api/v1/users"
@@ -35,7 +46,30 @@ service UserService {
       tags: "Users"
     };
   }
-  rpc ListUsers(ListUsersRequest) returns (stream User) {
+  rpc UpdateUser(UpdateUserRequest) returns (UserDTO) {
+    option (google.api.http) = {
+      // Route to this method from POST requests to /api/v1/users
+      put: "/api/v1/users"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Update a user"
+      description: "Update a user to the server."
+      tags: "Users"
+    };
+  }
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserRequest) {
+    option (google.api.http) = {
+      // Route to this method from POST requests to /api/v1/users
+      delete: "/api/v1/users/{user_id}"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Delete a user"
+      description: "Delete a user from the server."
+      tags: "Users"
+    };
+  }
+  rpc ListUsers(ListUsersRequest) returns (stream UserDTO) {
     option (google.api.http) = {
       // Route to this method from GET requests to /api/v1/users
       get: "/api/v1/users"
@@ -48,6 +82,21 @@ service UserService {
   }
 }
 
+message DeleteUserRequest {
+  int32 user_id = 1;
+}
+
+message GetUserRequest {
+  int32 user_id = 1;
+}
+
+message UpdateUserRequest {
+  int32 ID = 1;
+  string Nickname = 2;
+  string Email = 3;
+  string Password = 4;
+}
+
 message AddUserRequest {
   string Nickname = 1;
   string Email = 2;
@@ -56,7 +105,7 @@ message AddUserRequest {
 
 message ListUsersRequest {}
 
-message User {
+message UserDTO {
   int32 ID = 1;
   string Nickname = 2;
   string Email = 3;

@@ -15,7 +15,7 @@ import (
 
 var backend = server.New()
 var userInstance = models.User{}
-var eventInstance = server.Event{}
+var eventInstance = models.Event{}
 
 func TestMain(m *testing.M) {
 	var err error
@@ -108,11 +108,11 @@ func seedUsers() ([]models.User, error) {
 
 func refreshUserAndEventTable() error {
 
-	err := backend.DB.DropTableIfExists(&models.User{}, &server.Event{}).Error
+	err := backend.DB.DropTableIfExists(&models.User{}, &models.Event{}).Error
 	if err != nil {
 		return err
 	}
-	err = backend.DB.AutoMigrate(&models.User{}, &server.Event{}).Error
+	err = backend.DB.AutoMigrate(&models.User{}, &models.Event{}).Error
 	if err != nil {
 		return err
 	}
@@ -120,11 +120,11 @@ func refreshUserAndEventTable() error {
 	return nil
 }
 
-func seedOneUserAndOneEvent() (server.Event, error) {
+func seedOneUserAndOneEvent() (models.Event, error) {
 
 	err := refreshUserAndEventTable()
 	if err != nil {
-		return server.Event{}, err
+		return models.Event{}, err
 	}
 	user := models.User{
 		Nickname: "Sam Phil",
@@ -133,26 +133,26 @@ func seedOneUserAndOneEvent() (server.Event, error) {
 	}
 	err = backend.DB.Model(&models.User{}).Create(&user).Error
 	if err != nil {
-		return server.Event{}, err
+		return models.Event{}, err
 	}
-	event := server.Event{
+	event := models.Event{
 		Title:    "This is the title sam",
 		Content:  "This is the content sam",
 		AuthorID: user.ID,
 	}
-	err = backend.DB.Model(&server.Event{}).Create(&event).Error
+	err = backend.DB.Model(&models.Event{}).Create(&event).Error
 	if err != nil {
-		return server.Event{}, err
+		return models.Event{}, err
 	}
 	return event, nil
 }
 
-func seedUsersAndEvents() ([]models.User, []server.Event, error) {
+func seedUsersAndEvents() ([]models.User, []models.Event, error) {
 
 	var err error
 
 	if err != nil {
-		return []models.User{}, []server.Event{}, err
+		return []models.User{}, []models.Event{}, err
 	}
 	var users = []models.User{
 		models.User{
@@ -166,12 +166,12 @@ func seedUsersAndEvents() ([]models.User, []server.Event, error) {
 			Password: "password",
 		},
 	}
-	var events = []server.Event{
-		server.Event{
+	var events = []models.Event{
+		models.Event{
 			Title:   "Title 1",
 			Content: "Hello world 1",
 		},
-		server.Event{
+		models.Event{
 			Title:   "Title 2",
 			Content: "Hello world 2",
 		},
@@ -184,7 +184,7 @@ func seedUsersAndEvents() ([]models.User, []server.Event, error) {
 		}
 		events[i].AuthorID = users[i].ID
 
-		err = backend.DB.Model(&server.Event{}).Create(&events[i]).Error
+		err = backend.DB.Model(&models.Event{}).Create(&events[i]).Error
 		if err != nil {
 			log.Fatalf("cannot seed events table: %v", err)
 		}
